@@ -3,12 +3,16 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class FeatureComputer {
-	int k;
+	int numDistinctWords=0,totalWords=0,numClassFiles;
+	double k,m;
 	String filepath;
 	HashMap<String, Integer> hashbrown= new HashMap<String, Integer>();
+	HashMap<String,Integer> refinedHashbrown= new HashMap<String,Integer>();
+	HashMap<String, Double> murmaider = new HashMap<String, Double>();
 	boolean windows;
 
-	public FeatureComputer(int k, String filepath) {
+	public FeatureComputer(double k, double m, String filepath) {
+		this.m = m;
 		this.k = k;
 		this.filepath = filepath;
 		this.windows=System.getProperty("os.name").toLowerCase().contains("win");
@@ -17,33 +21,47 @@ public class FeatureComputer {
 	public void LexiconIT() {
 		try {
 			Scanner reader = new Scanner(new File(filepath));
-			int i=0;
+			//int i=0;
 			while(reader.hasNextLine()){
 				String nextFilePath=reader.nextLine();
-				System.out.println("File "+i);
-				if(nextFilePath.length()>3){//all logic for while loop in here
+				//System.out.println("File "+i);
+				if(nextFilePath.length()>3){//check to see if it's just an empty new line character
+					numClassFiles++;
+					//all logic for while loop in here
 					if(windows)nextFilePath.replaceAll("\\\\","/");
 					Scanner innerRead=new Scanner(new File(nextFilePath));
 					while(innerRead.hasNext()){
-						String tohashMaybe=innerRead.next();
-						if(tohashMaybe.equals("buy"))System.out.println("We got it! YUH!MILKMAN");
-						if(tohashMaybe.contains("\n"))tohashMaybe=tohashMaybe.substring(0, tohashMaybe.length()-1);//sanitized!
-						hashbrown.put(tohashMaybe, hashbrown.get(tohashMaybe)==null?1:hashbrown.get(tohashMaybe)+1);
+						totalWords++;
+						String itemToHash=innerRead.next();
+						//if(itemToHash.equals("buy"))System.out.println("We got it! YUH!MILKMAN");
+						if(itemToHash.contains("\n"))itemToHash=itemToHash.substring(0, itemToHash.length()-1);//sanitized!
+						hashbrown.put(itemToHash, hashbrown.get(itemToHash)==null?1:hashbrown.get(itemToHash)+1);
 					}
 					innerRead.close();
 				}
 				//stupid EOF
-				i++;
+				//i++;
 			}
-			System.out.println("done hashing everything");
-			System.out.println(hashbrown.containsKey("the"));
-			System.out.println(hashbrown.get("buy"));
-			
-			
-			
+			//sSystem.out.println("done hashing everything");
+			//System.out.println(hashbrown.containsKey("the"));
+			//System.out.println(hashbrown.get("buy"));
+			numDistinctWords=hashbrown.keySet().size();
+			filterHashMap();
+			computeProbabilities();
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 	}
-
+	public void filterHashMap(){
+		refinedHashbrown = new HashMap<String,Integer>();
+		for(String key : hashbrown.keySet()){
+			if(hashbrown.get(key)>k)
+				refinedHashbrown.put(key, hashbrown.get(key));
+		}
+	}
+	public void computeProbabilities(){
+		for(String key : refinedHashbrown.keySet()){
+			murmaider.put(key, ((double)(refinedHashbrown.get(key)+m))/((double)(totalWords*(m+1))));
+		}
+	}
 }

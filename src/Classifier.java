@@ -46,8 +46,6 @@ public class Classifier {
 			//System.out.println(hashbrown.containsKey("the"));
 			//System.out.println(hashbrown.get("buy"));
 			numDistinctWords=hashbrown.keySet().size();
-			filterHashMap();
-			computeProbabilities();
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
@@ -59,19 +57,19 @@ public class Classifier {
 				refinedHashbrown.put(key, hashbrown.get(key));
 		}
 	}
-	public void computeProbabilities(){
+	public void computeProbabilities(int goo){
 		for(String key : refinedHashbrown.keySet()){
-			murmaider.put(key, ((double)(refinedHashbrown.get(key)+m))/((double)(totalWords*(m+1))));
+			murmaider.put(key, ((double)(refinedHashbrown.get(key)+m))/((double)(goo*(m+1))));
 		}
 	}
-	public double probabilityOfClass(String filepath) throws FileNotFoundException{
+	public double probabilityOfClass(String filepath,int goo) throws FileNotFoundException{
 		double probability=Math.log(.5);//yes, this IS the probability that it is either spam or ham based on what we observed from the training set
 		Scanner reader = new Scanner(new File(filepath));
 		while(reader.hasNext()){
 			String next = reader.next();
 			//System.out.println(next);
 			//System.out.println("probability that "+next+" belongs to whatever class this is:"+(probabilityHash.get(next)==null?(m/((m+1)*v)):probabilityHash.get(next)));
-			probability+=Math.log(murmaider.get(next)==null?(m/((m+1)*(double)totalWords)):murmaider.get(next));
+			probability+=Math.log(murmaider.get(next)==null?(m/((m+1)*(double)goo)):murmaider.get(next));
 		}
 		return probability;
 	}

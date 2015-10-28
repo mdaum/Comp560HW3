@@ -5,18 +5,26 @@ import java.util.Scanner;
 
 
 public class Runner {
-
+	static int totalwords=0;
 	//NOTE: we need to calculate the probability of 
 	public static void main(String[] args) {
 		//Scanner keyboard= new Scanner(System.in);
 		//int k=keyboard.nextInt();
-		double k = 1;//20 looks like a high
-		double m = 30;//1 is 91 with k=20. NOTE: 0 results in 0s. Much break. 
+		double k = 6;//20 looks like a high
+		double m = 1;//1 is 91 with k=20. NOTE: 0 results in 0s. Much break. 
 		Classifier spamClassifier = new Classifier(k,m,"spamtraining.txt");
 		spamClassifier.LexiconIT();
+		totalwords+=spamClassifier.totalWords;
 		Classifier hamClassifier = new Classifier(k,m,"hamtraining.txt");
 		hamClassifier.LexiconIT();
+		totalwords+=hamClassifier.totalWords;
+		spamClassifier.filterHashMap();
+		hamClassifier.filterHashMap();
+		spamClassifier.computeProbabilities(totalwords);
+		hamClassifier.computeProbabilities(totalwords);
 		try{
+			printTestResults(spamClassifier,hamClassifier,"spamtesting.txt");
+			System.out.println("NOW FOR HAM");
 			printTestResults(spamClassifier,hamClassifier,"hamtesting.txt");
 		}
 		catch(FileNotFoundException f){
@@ -50,8 +58,8 @@ public class Runner {
 		while(reader.hasNext()){
 			String nextTestingDoc = reader.next();
 			//System.out.println(nextTrainingDoc+": "+probabilityOfClass(m,v,probabilityHash,nextTrainingDoc));
-			double probSpam = spamClassifier.probabilityOfClass(nextTestingDoc);
-			double probHam = hamClassifier.probabilityOfClass(nextTestingDoc);
+			double probSpam = spamClassifier.probabilityOfClass(nextTestingDoc,totalwords);
+			double probHam = hamClassifier.probabilityOfClass(nextTestingDoc,totalwords);
 			//System.out.println(nextTestingDoc+": "+(probSpam>probHam?"SPAAAAAM":"haaaaam"));
 			//only use this if we're expecting spam. In other words, only do this if we are using the spam testing set
 			i=probSpam>probHam?i+1:i;

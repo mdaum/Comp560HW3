@@ -1,8 +1,9 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class FeatureComputer {
+public class Classifier {
 	int numDistinctWords=0,totalWords=0,numClassFiles;
 	double k,m;
 	String filepath;
@@ -11,7 +12,7 @@ public class FeatureComputer {
 	HashMap<String, Double> murmaider = new HashMap<String, Double>();
 	boolean windows;
 
-	public FeatureComputer(double k, double m, String filepath) {
+	public Classifier(double k, double m, String filepath) {
 		this.m = m;
 		this.k = k;
 		this.filepath = filepath;
@@ -33,7 +34,6 @@ public class FeatureComputer {
 					while(innerRead.hasNext()){
 						totalWords++;
 						String itemToHash=innerRead.next();
-						//if(itemToHash.equals("buy"))System.out.println("We got it! YUH!MILKMAN");
 						if(itemToHash.contains("\n"))itemToHash=itemToHash.substring(0, itemToHash.length()-1);//sanitized!
 						hashbrown.put(itemToHash, hashbrown.get(itemToHash)==null?1:hashbrown.get(itemToHash)+1);
 					}
@@ -64,4 +64,16 @@ public class FeatureComputer {
 			murmaider.put(key, ((double)(refinedHashbrown.get(key)+m))/((double)(totalWords*(m+1))));
 		}
 	}
+	public double probabilityOfClass(String filepath) throws FileNotFoundException{
+		double probability=Math.log(.5);//yes, this IS the probability that it is either spam or ham based on what we observed from the training set
+		Scanner reader = new Scanner(new File(filepath));
+		while(reader.hasNext()){
+			String next = reader.next();
+			//System.out.println(next);
+			//System.out.println("probability that "+next+" belongs to whatever class this is:"+(probabilityHash.get(next)==null?(m/((m+1)*v)):probabilityHash.get(next)));
+			probability+=Math.log(murmaider.get(next)==null?(m/((m+1)*(double)totalWords)):murmaider.get(next));
+		}
+		return probability;
+	}
+	
 }

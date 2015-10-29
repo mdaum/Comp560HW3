@@ -59,7 +59,7 @@ public class Classifier {
 	}
 	public void computeProbabilities(int goo){
 		for(String key : refinedHashbrown.keySet()){
-			murmaider.put(key, ((double)(refinedHashbrown.get(key)+m))/((double)(goo*(m+1))));
+			murmaider.put(key, ((double)(refinedHashbrown.get(key)+m))/((double)(goo*m)+(double)totalWords));
 		}
 	}
 	public double probabilityOfClass(String filepath,int goo) throws FileNotFoundException{
@@ -69,7 +69,7 @@ public class Classifier {
 			String next = reader.next();
 			//System.out.println(next);
 			//System.out.println("probability that "+next+" belongs to whatever class this is:"+(probabilityHash.get(next)==null?(m/((m+1)*v)):probabilityHash.get(next)));
-			probability+=Math.log(murmaider.get(next)==null?(m/((m+1)*(double)goo)):murmaider.get(next));
+			probability+=Math.log(murmaider.get(next)==null?(m/((double)totalWords+(double)(goo)*m)):murmaider.get(next));
 		}
 		return probability;
 	}

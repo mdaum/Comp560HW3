@@ -38,9 +38,6 @@ public class Classifier {
 					while(innerRead.hasNextLine()){
 						file+=innerRead.nextLine()+"\n";
 					}
-					/*String itemToHash=innerRead.next();
-					if(itemToHash.contains("\n"))itemToHash=itemToHash.substring(0, itemToHash.length()-1);//sanitized!
-					hashbrown.put(itemToHash, hashbrown.get(itemToHash)==null?1:hashbrown.get(itemToHash)+1);*/
 					file=file.replaceAll("\n"," ");
 					String tokens[]=file.split(" ");
 					
@@ -56,24 +53,13 @@ public class Classifier {
 					}
 					innerRead.close();
 				}
-				//stupid EOF
-				//i++;
 			}
-			//sSystem.out.println("done hashing everything");
-			//System.out.println(hashbrown.containsKey("the"));
-			//System.out.println(hashbrown.get("buy"));
 			numDistinctWords=hashbrown.keySet().size();
 		} catch (Exception e) {
 			System.out.println(e.toString());
 		}
 	}
-	/*public void filterHashMap(){
-		refinedHashbrown = new HashMap<String,Integer>();
-		for(String key : hashbrown.keySet()){
-			if(hashbrown.get(key)>k)
-				refinedHashbrown.put(key, hashbrown.get(key));
-		}
-	}*/
+	
 	public void computeProbabilities(HashMap<String,Integer> lexicon,int V){
 		for(String key : lexicon.keySet()){
 			murmaider.put(key, ((double)(hashbrown.get(key)==null?0:hashbrown.get(key)+m))/((double)(V*m)+(double)totalWords));
@@ -86,9 +72,6 @@ public class Classifier {
 		while(reader.hasNextLine()){
 			file+=reader.nextLine()+"\n";
 		}
-		/*String itemToHash=innerRead.next();
-		if(itemToHash.contains("\n"))itemToHash=itemToHash.substring(0, itemToHash.length()-1);//sanitized!
-		hashbrown.put(itemToHash, hashbrown.get(itemToHash)==null?1:hashbrown.get(itemToHash)+1);*/
 		file=file.replaceAll("\n"," ");
 		String tokens[]=file.split(" ");
 		
@@ -102,8 +85,6 @@ public class Classifier {
 			String next=toHash;
 			probability+=Math.log(murmaider.get(next)==null?(m/((double)totalWords+(double)(goo)*m)):murmaider.get(next));
 		}
-			//System.out.println(next);
-			//System.out.println("probability that "+next+" belongs to whatever class this is:"+(probabilityHash.get(next)==null?(m/((m+1)*v)):probabilityHash.get(next)));
 		
 		return probability;
 	}

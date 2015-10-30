@@ -1,6 +1,12 @@
 # Comp560HW3
-TODO
-We perhaps should define one lexicon....
-was concerned hearing, "Your accuracy should be the same for ham/spam"
-however, one lexicon means only one k/m value used, try to get best of both worlds.
-The fact that we could get different accuracy w/ diff values of k/m is understandable.
+
+To run our normal Naive Bayes implementation:
+Simply run command:
+java -jar A3NormalNaiveBayes.jar
+
+To run our n-grams Naive Bayes implementation:
+run command:
+java -jar A3NGramNaiveBayes.jar g k m
+-where g is an integer representing the cardinality of the "grams"
+-k is integer that represents k value
+-m is integer that represents m value

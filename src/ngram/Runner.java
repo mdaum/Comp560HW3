@@ -12,26 +12,29 @@ public class Runner {
 		Scanner keyboard= new Scanner(System.in);
 		System.out.println("what gram?");
 		int gram=keyboard.nextInt();
-		double k = 1;//20 looks like a high
-		double m = 50;//1 is 91 with k=20. NOTE: 0 results in 0s. Much break. 
+		double k = 8;//20 looks like a high
+		double m = 45;//1 is 91 with k=20. NOTE: 0 results in 0s. Much break. 
 		Classifier spamClassifier = new Classifier(k,m,"spamtraining.txt",gram);
 		spamClassifier.LexiconIT();
 		totalwords+=spamClassifier.totalWords;
 		Classifier hamClassifier = new Classifier(k,m,"hamtraining.txt",gram);
 		hamClassifier.LexiconIT();
 		totalwords+=hamClassifier.totalWords;
-		spamClassifier.filterHashMap();
-		hamClassifier.filterHashMap();
-		HashMap<String,String> screwYouJava = new HashMap<String,String>();
-		for(String key: spamClassifier.refinedHashbrown.keySet()){
-			screwYouJava.put(key, "PLEASE GO CHOKE ON A NICE GOBLET OF RUSTY NAILS");
+		HashMap<String,Integer> primordialLexicon = new HashMap<String,Integer>();
+		for(String key : spamClassifier.hashbrown.keySet()){
+			primordialLexicon.put(key,spamClassifier.hashbrown.get(key));
 		}
-		for(String key: hamClassifier.refinedHashbrown.keySet()){
-			screwYouJava.put(key, "DON'T FORGET TO WASH IT DOWN WITH A SOMBER JUG OF WINDEX AFTERWARD");
+		for(String key : hamClassifier.hashbrown.keySet()){
+			primordialLexicon.put(key,primordialLexicon.get(key)==null?hamClassifier.hashbrown.get(key):primordialLexicon.get(key)+hamClassifier.hashbrown.get(key));
 		}
-		int uniqueWords=screwYouJava.keySet().size();
-		spamClassifier.computeProbabilities(uniqueWords);
-		hamClassifier.computeProbabilities(uniqueWords);
+		HashMap<String,Integer> lexicon = new HashMap<String,Integer>();
+		for(String key:primordialLexicon.keySet()){
+			if(primordialLexicon.get(key)>k)
+				lexicon.put(key,primordialLexicon.get(key));
+		}
+		int numLexiconWords=lexicon.keySet().size();
+		spamClassifier.computeProbabilities(lexicon,numLexiconWords);
+		hamClassifier.computeProbabilities(lexicon,numLexiconWords);
 		try{
 			printTestResults(spamClassifier,hamClassifier,"spamtesting.txt");
 			System.out.println("NOW FOR HAM");

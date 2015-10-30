@@ -67,16 +67,16 @@ public class Classifier {
 			System.out.println(e.toString());
 		}
 	}
-	public void filterHashMap(){
+	/*public void filterHashMap(){
 		refinedHashbrown = new HashMap<String,Integer>();
 		for(String key : hashbrown.keySet()){
 			if(hashbrown.get(key)>k)
 				refinedHashbrown.put(key, hashbrown.get(key));
 		}
-	}
-	public void computeProbabilities(int goo){
-		for(String key : refinedHashbrown.keySet()){
-			murmaider.put(key, ((double)(refinedHashbrown.get(key)+m))/((double)(goo*m)+(double)totalWords));
+	}*/
+	public void computeProbabilities(HashMap<String,Integer> lexicon,int V){
+		for(String key : lexicon.keySet()){
+			murmaider.put(key, ((double)(hashbrown.get(key)==null?0:hashbrown.get(key)+m))/((double)(V*m)+(double)totalWords));
 		}
 	}
 	public double probabilityOfClass(String filepath,int goo) throws FileNotFoundException{

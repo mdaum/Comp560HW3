@@ -34,7 +34,7 @@ public class Runner {
 		try{
 			System.out.println("SPAM RESULTS");
 			printTestResults(spamClassifier,hamClassifier,"spamtesting.txt");
-			System.out.println("NOW FOR HAM");
+			System.out.println("HAM RESULTS");
 			printTestResults(spamClassifier,hamClassifier,"hamtesting.txt");
 		}
 		catch(FileNotFoundException f){

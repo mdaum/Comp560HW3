@@ -12,7 +12,7 @@ public class Runner {
 		//Scanner keyboard= new Scanner(System.in);
 		//int k=keyboard.nextInt();
 		double k = 8;//13 looks like a high
-		double m = 50;//50 looks like a high with k=13. we get 92%, 92% 
+		double m = 45;//50 looks like a high with k=13. we get 92%, 92% 
 		Classifier spamClassifier = new Classifier(k,m,"spamtraining.txt");
 		spamClassifier.LexiconIT();
 		totalwords+=spamClassifier.totalWords;

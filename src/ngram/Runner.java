@@ -12,8 +12,8 @@ public class Runner {
 		Scanner keyboard= new Scanner(System.in);
 		System.out.println("what gram?");
 		int gram=keyboard.nextInt();
-		double k = 6;//20 looks like a high
-		double m = 1;//1 is 91 with k=20. NOTE: 0 results in 0s. Much break. 
+		double k = 1;//20 looks like a high
+		double m = 50;//1 is 91 with k=20. NOTE: 0 results in 0s. Much break. 
 		Classifier spamClassifier = new Classifier(k,m,"spamtraining.txt",gram);
 		spamClassifier.LexiconIT();
 		totalwords+=spamClassifier.totalWords;
@@ -22,8 +22,16 @@ public class Runner {
 		totalwords+=hamClassifier.totalWords;
 		spamClassifier.filterHashMap();
 		hamClassifier.filterHashMap();
-		spamClassifier.computeProbabilities(totalwords);
-		hamClassifier.computeProbabilities(totalwords);
+		HashMap<String,String> screwYouJava = new HashMap<String,String>();
+		for(String key: spamClassifier.refinedHashbrown.keySet()){
+			screwYouJava.put(key, "PLEASE GO CHOKE ON A NICE GOBLET OF RUSTY NAILS");
+		}
+		for(String key: hamClassifier.refinedHashbrown.keySet()){
+			screwYouJava.put(key, "DON'T FORGET TO WASH IT DOWN WITH A SOMBER JUG OF WINDEX AFTERWARD");
+		}
+		int uniqueWords=screwYouJava.keySet().size();
+		spamClassifier.computeProbabilities(uniqueWords);
+		hamClassifier.computeProbabilities(uniqueWords);
 		try{
 			printTestResults(spamClassifier,hamClassifier,"spamtesting.txt");
 			System.out.println("NOW FOR HAM");
